@@ -36,6 +36,7 @@ BLUE = (0, 0, 200)
 RED = (255, 0, 0)
 GREEN = (0, 200, 0)
 BLACK = (0, 0, 0)
+YELLOW = (255,255,0)
 
 # Set up the player
 player_x = 290
@@ -140,8 +141,8 @@ while running:
         pygame.draw.rect(screen, BLUE, wall)
 
     # Draw the player
-    player = pygame.Rect(player_x, player_y, player_size, player_size)
-    pygame.draw.rect(screen, RED, player)
+    player = pygame.draw.circle(player_x, player_y, YELLOW, (400, 300), player)
+    pygame.draw.circle(player_x, player_y, YELLOW, (400, 300), player)
 
     # Display the winning message
     if won:
