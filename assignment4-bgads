@@ -21,10 +21,10 @@ pygame.init()
  
 pygame.mixer.music.load("freesound_community-playing-pac-man-6783.mp3")
 
-# Play the music 
+
 pygame.mixer.music.play(1)
 
-# Adjust volume (range is 0.0 to 1.0)
+
 pygame.mixer.music.set_volume(0.5)
    # Set screen resolution
 SCREEN_WIDTH = 600
@@ -43,8 +43,8 @@ BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
  
    # Set up the player
-player_x = 290
-player_y = 0
+player_x = 300
+player_y = 20
 player_size = 16
 speed = 3
  
@@ -53,7 +53,12 @@ exit_rect = pygame.Rect(540, 340, 30, 30)
  
    # Create the maze walls
 walls = [
-       pygame.Rect(45, 0, 20, 400),
+       pygame.Rect(45, 395, 495, 20),
+       pygame.Rect(45, 0, 20, 170),
+       pygame.Rect(45, 250, 20, 175),
+       pygame.Rect(0, 150, 65, 20),
+       pygame.Rect(0, 250, 45, 20),
+       
        
        pygame.Rect(100, 40, 20, 325),
        pygame.Rect(155, 0, 20, 150),
@@ -76,8 +81,14 @@ walls = [
        pygame.Rect(430, 0, 20, 150),
        pygame.Rect(485, 40, 20, 325),
        
-       pygame.Rect(540, 0, 20, 400),
+       pygame.Rect(540, 0, 20, 150),
+       pygame.Rect(540, 250, 20, 175),
+       pygame.Rect(540, 150, 65, 20),
+       pygame.Rect(540, 250, 65, 20),
+       
+       
        pygame.Rect(270, 170, 70, 75),
+       pygame.Rect(45, 0, 495, 10),
    ]
  
    # Set up the game
@@ -125,14 +136,21 @@ while running:
                    player_y -= speed
  
            # Keep the player inside the screen
-           if player_x < 0:
-               player_x = 0
+           if player_x < 1:
+               player_x = 582
+               player_y = 200
            if player_x > SCREEN_WIDTH - player_size:
                player_x = SCREEN_WIDTH - player_size
-           if player_y < 0:
-               player_y = 0
-           if player_y > SCREEN_HEIGHT - player_size:
-               player_y = SCREEN_HEIGHT - player_size
+           
+               
+           #print(player_x)
+           #print(player_y)
+           if player_x >582:
+                player_x = 0
+                player_y = 200
+           if player_x > SCREEN_WIDTH - player_size:
+                player_x = SCREEN_WIDTH - player_size
+          
  
            # Update the player rectangle
            player = pygame.Rect(player_x, player_y, player_size, player_size)
