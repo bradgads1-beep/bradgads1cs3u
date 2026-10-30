@@ -46,7 +46,11 @@ player_x = 300
 player_y = 20
 player_size = 16
 speed = 3
- 
+enemy_x = 300
+enemy_y = 300
+enemy_size = 16
+enemy_speed = 0.5
+
    # Create the exit
 exit_rect = pygame.Rect(540, 340, 30, 30)
  
@@ -142,6 +146,8 @@ dots = [pygame.Rect(70, 200, 15, 15),
         pygame.Rect(570, 200, 15, 15),
         
        ]
+
+
    # Set up the game
 clock = pygame.time.Clock()
 running = True
@@ -193,7 +199,17 @@ while running:
            if player_x > SCREEN_WIDTH - player_size:
                player_x = SCREEN_WIDTH - player_size
            
-               
+        
+
+           if enemy_x < player_x:
+                enemy_x += enemy_speed
+           elif enemy_x > player_x:
+                enemy_x -= enemy_speed
+           if enemy_y < player_y:
+                enemy_y += enemy_speed
+           elif enemy_y > player_y:
+                enemy_y -= enemy_speed
+
            #print(player_x)
            #print(player_y)
            if player_x >582:
@@ -205,6 +221,10 @@ while running:
  
            # Update the player rectangle
            player = pygame.Rect(player_x, player_y, player_size, player_size)
+           enemy = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+
+           if player.colliderect(enemy):
+                running = False 
  
            # Check if the player reaches the exit
            if player.colliderect(exit_rect):
@@ -227,11 +247,16 @@ while running:
  
        # Draw the player
        player = pygame.draw.circle(screen, YELLOW, (player_x, player_y), player_size)
- 
+
+       enemy = pygame.draw.circle(screen, RED, (enemy_x, enemy_y), enemy_size)
+
+       if sum(1 for dot in dots if dot.x == 600 and dot.y == 600) >= 46:
+            won = True
+    
        # Display the winning message
        if won:
            font = pygame.font.SysFont(None, 48)
-           message = font.render("YOU WIN!", True, RED)
+           message = font.render("YOU WIN!", True, WHITE)
            screen.blit(message, (220, 180))
  
        # Update the display
