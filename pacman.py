@@ -49,7 +49,7 @@ speed = 3
 enemy_x = 300
 enemy_y = 300
 enemy_size = 16
-enemy_speed = 0.5
+enemy_speed = 0.7
 
    # Create the exit
 exit_rect = pygame.Rect(540, 340, 30, 30)
