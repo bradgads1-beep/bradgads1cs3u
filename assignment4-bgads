@@ -1,9 +1,8 @@
 import pygame
- 
+
 def check_collision(player, walls):
        """
        Checks whether the player collides with any of the maze walls.
-       
        Parameters:
            player (pygame.Rect): The rectangle representing the player.
            walls (list): A list of rectangles representing the maze walls.
@@ -47,7 +46,11 @@ player_x = 300
 player_y = 20
 player_size = 16
 speed = 3
- 
+enemy_x = 300
+enemy_y = 300
+enemy_size = 16
+enemy_speed = 0.7
+
    # Create the exit
 exit_rect = pygame.Rect(540, 340, 30, 30)
  
@@ -90,7 +93,61 @@ walls = [
        pygame.Rect(270, 170, 70, 75),
        pygame.Rect(45, 0, 495, 10),
    ]
- 
+dots = [pygame.Rect(70, 200, 15, 15),
+        pygame.Rect(127, 200, 15, 15),
+        pygame.Rect(180, 200, 15, 15),
+        pygame.Rect(239, 200, 15, 15),
+        pygame.Rect(349, 200, 15, 15),
+        pygame.Rect(405, 200, 15, 15),
+        pygame.Rect(460, 200, 15, 15),
+        pygame.Rect(525, 200, 15, 15),
+
+        pygame.Rect(70, 40, 15, 15),
+        pygame.Rect(127, 40, 15, 15),
+        pygame.Rect(180, 40, 15, 15),
+        pygame.Rect(239, 40, 15, 15),
+        pygame.Rect(349, 40, 15, 15),
+        pygame.Rect(405, 40, 15, 15),
+        pygame.Rect(460, 40, 15, 15),
+        pygame.Rect(525, 40, 15, 15),
+
+        pygame.Rect(70, 120, 15, 15),
+        pygame.Rect(127, 120, 15, 15),
+        pygame.Rect(180, 120, 15, 15),
+        pygame.Rect(239, 120, 15, 15),
+        pygame.Rect(349, 120, 15, 15),
+        pygame.Rect(405, 120, 15, 15),
+        pygame.Rect(460, 120, 15, 15),
+        pygame.Rect(525, 120, 15, 15),
+
+        pygame.Rect(70, 270, 15, 15),
+        pygame.Rect(127, 270, 15, 15),
+        pygame.Rect(180, 270, 15, 15),
+        pygame.Rect(239, 270, 15, 15),
+        pygame.Rect(349, 270, 15, 15),
+        pygame.Rect(405, 270, 15, 15),
+        pygame.Rect(460, 270, 15, 15),
+        pygame.Rect(525, 270, 15, 15),
+
+        pygame.Rect(70, 350, 15, 15),
+        pygame.Rect(127, 350, 15, 15),
+        pygame.Rect(180, 350, 15, 15),
+        pygame.Rect(239, 350, 15, 15),
+        pygame.Rect(349, 350, 15, 15),
+        pygame.Rect(405, 350, 15, 15),
+        pygame.Rect(460, 350, 15, 15),
+        pygame.Rect(525, 350, 15, 15),
+
+        pygame.Rect(20, 200, 15, 15),
+        pygame.Rect(295, 40, 15, 15),
+        pygame.Rect(295, 120, 15, 15),
+        pygame.Rect(295, 350, 15, 15),
+        pygame.Rect(295, 270, 15, 15),
+        pygame.Rect(570, 200, 15, 15),
+        
+       ]
+
+
    # Set up the game
 clock = pygame.time.Clock()
 running = True
@@ -142,7 +199,17 @@ while running:
            if player_x > SCREEN_WIDTH - player_size:
                player_x = SCREEN_WIDTH - player_size
            
-               
+        
+
+           if enemy_x < player_x:
+                enemy_x += enemy_speed
+           elif enemy_x > player_x:
+                enemy_x -= enemy_speed
+           if enemy_y < player_y:
+                enemy_y += enemy_speed
+           elif enemy_y > player_y:
+                enemy_y -= enemy_speed
+
            #print(player_x)
            #print(player_y)
            if player_x >582:
@@ -154,6 +221,10 @@ while running:
  
            # Update the player rectangle
            player = pygame.Rect(player_x, player_y, player_size, player_size)
+           enemy = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+
+           if player.colliderect(enemy):
+                running = False 
  
            # Check if the player reaches the exit
            if player.colliderect(exit_rect):
@@ -165,14 +236,27 @@ while running:
        # Draw the maze walls
        for wall in walls:
            pygame.draw.rect(screen, BLUE, wall)
+
+       for dot in dots:
+           pygame.draw.rect(screen, WHITE, dot)    
+
+       for dot in dots:
+           if player.colliderect(dot):
+               dot.x = 600
+               dot.y = 600
  
        # Draw the player
        player = pygame.draw.circle(screen, YELLOW, (player_x, player_y), player_size)
- 
+
+       enemy = pygame.draw.circle(screen, RED, (enemy_x, enemy_y), enemy_size)
+
+       if sum(1 for dot in dots if dot.x == 600 and dot.y == 600) >= 46:
+            won = True
+    
        # Display the winning message
        if won:
            font = pygame.font.SysFont(None, 48)
-           message = font.render("YOU WIN!", True, RED)
+           message = font.render("YOU WIN!", True, WHITE)
            screen.blit(message, (220, 180))
  
        # Update the display
