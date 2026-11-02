@@ -165,28 +165,28 @@ while running:
  
        if not won:
            # Move left
-           if keys[pygame.K_LEFT]:
+           if keys[pygame.K_a]:
                player_x -= speed
                player = pygame.Rect(player_x, player_y, player_size, player_size)
                if check_collision(player, walls):
                    player_x += speed
  
            # Move right
-           if keys[pygame.K_RIGHT]:
+           if keys[pygame.K_d]:
                player_x += speed
                player = pygame.Rect(player_x, player_y, player_size, player_size)
                if check_collision(player, walls):
                    player_x -= speed
  
            # Move up
-           if keys[pygame.K_UP]:
+           if keys[pygame.K_w]:
                player_y -= speed
                player = pygame.Rect(player_x, player_y, player_size, player_size)
                if check_collision(player, walls):
                    player_y += speed
  
            # Move down
-           if keys[pygame.K_DOWN]:
+           if keys[pygame.K_s]:
                player_y += speed
                player = pygame.Rect(player_x, player_y, player_size, player_size)
                if check_collision(player, walls):
