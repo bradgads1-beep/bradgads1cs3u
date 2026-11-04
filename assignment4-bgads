@@ -201,15 +201,15 @@ while running:
                player_x = SCREEN_WIDTH - player_size
            
         
-
-           if enemy_x < player_x:
-                enemy_x += enemy_speed
-           elif enemy_x > player_x:
-                enemy_x -= enemy_speed
-           if enemy_y < player_y:
-                enemy_y += enemy_speed
-           elif enemy_y > player_y:
-                enemy_y -= enemy_speed
+           if power_up_x == 290 and power_up_y == 345:
+                if enemy_x < player_x:
+                    enemy_x += enemy_speed
+                elif enemy_x > player_x:
+                     enemy_x -= enemy_speed
+                if enemy_y < player_y:
+                    enemy_y += enemy_speed
+                elif enemy_y > player_y:
+                    enemy_y -= enemy_speed
 
            #print(player_x)
            #print(player_y)
@@ -265,7 +265,16 @@ while running:
             
        if power_up_x == 600 and power_up_y == 600:
            player = pygame.draw.circle(screen, WHITE, (player_x, player_y), player_size)
-    
+           
+           
+           if enemy_x < player_x:
+                enemy_x -= enemy_speed
+           elif enemy_x > player_x:
+                enemy_x += enemy_speed
+           if enemy_y < player_y:
+                enemy_y -= enemy_speed
+           elif enemy_y > player_y:
+                enemy_y += enemy_speed
        # Display the winning message
        if won:
            font = pygame.font.SysFont(None, 48)
