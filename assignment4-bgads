@@ -40,7 +40,7 @@ RED = (255, 0, 0)
 GREEN = (0, 200, 0)
 BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
- 
+ORANGE = (255,165,0)
    # Set up the player
 player_x = 300
 player_y = 20
@@ -50,9 +50,9 @@ enemy_x = 300
 enemy_y = 300
 enemy_size = 16
 enemy_speed = 0.7
-
-   # Create the exit
-exit_rect = pygame.Rect(540, 340, 30, 30)
+power_up_x = 290
+power_up_y = 345
+ 
  
    # Create the maze walls
 walls = [
@@ -141,14 +141,15 @@ dots = [pygame.Rect(70, 200, 15, 15),
         pygame.Rect(20, 200, 15, 15),
         pygame.Rect(295, 40, 15, 15),
         pygame.Rect(295, 120, 15, 15),
-        pygame.Rect(295, 350, 15, 15),
+      
         pygame.Rect(295, 270, 15, 15),
         pygame.Rect(570, 200, 15, 15),
         
        ]
 
+power_ups = pygame.Rect(power_up_x, power_up_y,25, 25)
 
-   # Set up the game
+# Set up the game
 clock = pygame.time.Clock()
 running = True
 won = False
@@ -226,10 +227,7 @@ while running:
            if player.colliderect(enemy):
                 running = False 
  
-           # Check if the player reaches the exit
-           if player.colliderect(exit_rect):
-               won = True
- 
+           
        # Draw the background
        screen.fill(BLACK)
  
@@ -244,14 +242,29 @@ while running:
            if player.colliderect(dot):
                dot.x = 600
                dot.y = 600
- 
+       for power_up in power_ups:
+           pygame.draw.rect(screen, ORANGE, power_ups)
+           
+       for power_up in power_ups:
+            if player.colliderect(power_ups):
+                 power_up_x = 600
+                 power_up_y = 600
+                 power_ups = None
+                 power_ups = pygame.Rect(power_up_x, power_up_y,25, 25)
+                 print(power_up_x)
+                 print(power_up_y)
        # Draw the player
        player = pygame.draw.circle(screen, YELLOW, (player_x, player_y), player_size)
 
        enemy = pygame.draw.circle(screen, RED, (enemy_x, enemy_y), enemy_size)
 
-       if sum(1 for dot in dots if dot.x == 600 and dot.y == 600) >= 46:
+       #power = pygame.draw.rect(screen, ORANGE, (300,350, 25,25))
+       
+       if sum(1 for dot in dots if dot.x == 600 and dot.y == 600) >= 45:
             won = True
+            
+       if power_up_x == 600 and power_up_y == 600:
+           player = pygame.draw.circle(screen, WHITE, (player_x, player_y), player_size)
     
        # Display the winning message
        if won:
