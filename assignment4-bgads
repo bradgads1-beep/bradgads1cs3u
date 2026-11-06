@@ -149,7 +149,8 @@ dots = [
 clock = pygame.time.Clock()
 running = True
 won = False
-
+level_one = False
+level_two = False
 # Main game loop
 while running:
     # Maintain 60 FPS frame rate
@@ -163,7 +164,7 @@ while running:
     # Get the keys being pressed
     keys = pygame.key.get_pressed()
 
-    if not won:
+    if won == False and level_two == False:
         # Move left
         if keys[pygame.K_a]:
             player_x -= speed
@@ -198,7 +199,7 @@ while running:
             player_y = 200
         
         if player_x > 570:
-            player_x = 0
+            player_x = 6
             player_y = 200
 
         # Update the collision definitions
@@ -251,6 +252,7 @@ while running:
                 dot.x = -100  # Move off-screen instead of drawing loops
                 dot.y = -100
 
+        
     # Draw the background
     screen.fill(BLACK)
 
@@ -276,7 +278,19 @@ while running:
 
     # Check Win Condition (all dots eaten)
     if all(dot.x == -100 for dot in dots):
-        won = True
+        for dot in dots:
+            if dot.x > 0:
+                 pygame.draw.rect(screen, WHITE, dot)    
+        
+        level_two = True
+        
+    if level_two == True:
+        for dot in dots:
+            if dot.x > 0:
+                pygame.draw.rect(screen, WHITE, dot)    
+        
+        level_two = False
+          
 
     pygame.display.flip()
 
