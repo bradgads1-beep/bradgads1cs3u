@@ -19,13 +19,10 @@ def check_collision(player, walls):
 # Initialize Pygame
 pygame.init()
 
-# Try loading music safely
-try:
-    pygame.mixer.music.load("freesound_community-playing-pac-man-6783.mp3")
-    pygame.mixer.music.play(-1) # -1 plays in a continuous loop
-    pygame.mixer.music.set_volume(0.5)
-except pygame.error:
-    print("Audio file not found, running game muted.")
+
+pygame.mixer.music.load("freesound_community-playing-pac-man-6783.mp3")
+pygame.mixer.music.play(-1) # -1 plays in a continuous loop
+pygame.mixer.music.set_volume(0.5)
 
 # Set screen resolution
 SCREEN_WIDTH = 600
@@ -279,16 +276,63 @@ while running:
     # Check Win Condition (all dots eaten)
     if all(dot.x == -100 for dot in dots):
         for dot in dots:
-            if dot.x > 0:
-                 pygame.draw.rect(screen, WHITE, dot)    
+            level_two = True
+            
+            
         
-        level_two = True
-        
+            dots = [
+    pygame.Rect(70, 200, 15, 15), 
+    pygame.Rect(127, 200, 15, 15),
+    pygame.Rect(180, 200, 15, 15),
+    pygame.Rect(239, 200, 15, 15),
+    pygame.Rect(349, 200, 15, 15),
+    pygame.Rect(405, 200, 15, 15), 
+    pygame.Rect(460, 200, 15, 15), 
+    pygame.Rect(525, 200, 15, 15),
+    pygame.Rect(70, 40, 15, 15), 
+    pygame.Rect(127, 40, 15, 15), 
+    pygame.Rect(180, 40, 15, 15), 
+    pygame.Rect(239, 40, 15, 15),
+    pygame.Rect(349, 40, 15, 15), 
+    pygame.Rect(405, 40, 15, 15), 
+    pygame.Rect(460, 40, 15, 15), 
+    pygame.Rect(525, 40, 15, 15),
+    pygame.Rect(70, 120, 15, 15), 
+    pygame.Rect(127, 120, 15, 15), 
+    pygame.Rect(180, 120, 15, 15),
+    pygame.Rect(239, 120, 15, 15),
+    pygame.Rect(349, 120, 15, 15),
+    pygame.Rect(405, 120, 15, 15),
+    pygame.Rect(460, 120, 15, 15), 
+    pygame.Rect(525, 120, 15, 15),
+    pygame.Rect(70, 270, 15, 15),
+    pygame.Rect(127, 270, 15, 15), 
+    pygame.Rect(180, 270, 15, 15),
+    pygame.Rect(239, 270, 15, 15),
+    pygame.Rect(349, 270, 15, 15), 
+    pygame.Rect(405, 270, 15, 15), 
+    pygame.Rect(460, 270, 15, 15),
+    pygame.Rect(525, 270, 15, 15),
+    pygame.Rect(70, 350, 15, 15), 
+    pygame.Rect(127, 350, 15, 15), 
+    pygame.Rect(180, 350, 15, 15), 
+    pygame.Rect(239, 350, 15, 15),
+    pygame.Rect(349, 350, 15, 15), 
+    pygame.Rect(405, 350, 15, 15), 
+    pygame.Rect(460, 350, 15, 15), 
+    pygame.Rect(525, 350, 15, 15),
+    pygame.Rect(20, 200, 15, 15), 
+    pygame.Rect(295, 40, 15, 15), 
+    pygame.Rect(295, 120, 15, 15), 
+    pygame.Rect(295, 270, 15, 15),
+    pygame.Rect(570, 200, 15, 15),
+                             ]
     if level_two == True:
         for dot in dots:
             if dot.x > 0:
                 pygame.draw.rect(screen, WHITE, dot)    
         
+
         level_two = False
           
 
