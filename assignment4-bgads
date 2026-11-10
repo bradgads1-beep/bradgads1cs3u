@@ -60,6 +60,9 @@ power_up_active = True
 power_up_active1 = True
 power_up_timer = 0
 
+level2_text = 0
+text_timer = 0
+
 # Create the maze walls
 walls = [
     pygame.Rect(45, 395, 495, 20),
@@ -275,6 +278,8 @@ while running:
 
     # Check Win Condition (all dots eaten)
     if all(dot.x == -100 for dot in dots):
+        level2_text += 1000
+        
         for dot in dots:
             level_two = True
             
@@ -327,6 +332,12 @@ while running:
     pygame.Rect(295, 270, 15, 15),
     pygame.Rect(570, 200, 15, 15),
                              ]
+    if level2_text>100:
+        font = pygame.font.SysFont(None, 48)
+        message = font.render("LEVEL TWO!", True, WHITE)
+        screen.blit(message, (220, 180))
+        
+        
     if level_two == True:
         for dot in dots:
             if dot.x > 0:
