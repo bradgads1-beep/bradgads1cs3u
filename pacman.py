@@ -258,6 +258,8 @@ while running:
            font = pygame.font.SysFont(None, 48)
            message = font.render("YOU WIN!", True, WHITE)
            screen.blit(message, (220, 180))
+
+           won = False
  
        # Update the display
        pygame.display.flip()
