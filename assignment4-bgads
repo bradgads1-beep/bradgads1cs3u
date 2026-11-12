@@ -222,7 +222,7 @@ while running:
                 power_up_active1 = False
                 power_up_timer = 320
 
-            # Normal enemy chasing
+            # enemy chasing
             if enemy_x < player_x + player_size:
                 enemy_x += enemy_speed
             elif enemy_x > player_x + player_size:
@@ -250,8 +250,8 @@ while running:
             power_up_x = 600
             power_up_y = 600
 
-        # Second enemy movement in Level Two
-        if level2_text > 0:
+        # Second enemy movement
+        if level2_text > 0 :
 
             if enemy2_x < player_x + player_size:
                 enemy2_x += enemy_speed
@@ -262,6 +262,8 @@ while running:
                 enemy2_y += enemy_speed
             elif enemy2_y > player_y + player_size:
                 enemy2_y -= enemy_speed
+
+        
 
             # Second ghost collision
             if player_rect.colliderect(enemy2_rect):
@@ -279,7 +281,7 @@ while running:
             else:
                 running = False
 
-        # Handle Dot eating mechanics
+        # Dot eating mechanics
         for dot in dots:
             if player_rect.colliderect(dot) and dot.x != -100:
                 dot.x = -100
@@ -326,7 +328,7 @@ while running:
             enemy_size
         )
 
-    # Check Win Condition (all dots eaten)
+    # Check win con (dots eaten)
     if all(dot.x == -100 for dot in dots):
 
         if level2_text == 0:
@@ -416,7 +418,7 @@ while running:
 
         level_two = False
 
-    # Ending screen
+    # display ending screen
     if game_won == True:
 
         pygame.mixer.music.stop()
