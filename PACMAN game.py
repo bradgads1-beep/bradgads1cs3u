@@ -1,0 +1,438 @@
+import pygame
+import time
+
+def check_collision(player, walls):
+    """
+    Checks whether the player collides with any of the maze walls.
+    """
+    for wall in walls:
+        if player.colliderect(wall):
+            return True
+    return False
+
+# Initialize Pygame
+pygame.init()
+
+pygame.mixer.music.load("freesound_community-playing-pac-man-6783.mp3")
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.5)
+
+# Set screen resolution
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 400
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("PAC-MAN!!!")
+
+# Set up colours
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 200)
+RED = (255, 0, 0)
+GREEN = (0, 200, 0)
+BLACK = (0, 0, 0)
+YELLOW = (255, 255, 0)
+ORANGE = (255, 165, 0)
+PURPLE = (0,255,255)
+PERIWINKLE = (204, 204, 255)
+
+# Set up the player
+player_x = 290
+player_y = 30
+player_size = 12
+speed = 3
+
+# Enemy setup
+enemy_x = 300
+enemy_y = 300
+enemy_size = 12
+enemy_speed = 0.5
+
+# Second enemy setup
+enemy2_x = 300
+enemy2_y = 100
+
+# Power-up variables
+power_up_x = 290
+power_up_y = 345
+power_up_active = True
+power_up_active1 = True
+power_up_timer = 0
+
+level2_text = 0
+text_timer = 0
+
+# Score and message timer
+score = 0
+level_message_timer = 0
+game_won = False
+
+# Create the maze walls
+walls = [
+    pygame.Rect(45, 395, 495, 20),
+    pygame.Rect(45, 0, 20, 170),
+    pygame.Rect(45, 250, 20, 175),
+    pygame.Rect(0, 150, 65, 20),
+    pygame.Rect(0, 250, 45, 20),
+
+    pygame.Rect(100, 40, 20, 325),
+    pygame.Rect(155, 0, 20, 150),
+    pygame.Rect(155, 200, 20, 50),
+    pygame.Rect(155, 300, 20, 100),
+
+    pygame.Rect(260, 40, 20, 100),
+    pygame.Rect(320, 40, 20, 100),
+    pygame.Rect(375, 40, 20, 325),
+    pygame.Rect(210, 40, 20, 325),
+    pygame.Rect(265, 275, 20, 85),
+    pygame.Rect(320, 275, 20, 85),
+
+    pygame.Rect(430, 200, 20, 50),
+    pygame.Rect(430, 300, 20, 100),
+    pygame.Rect(430, 0, 20, 150),
+    pygame.Rect(485, 40, 20, 325),
+
+    pygame.Rect(540, 0, 20, 150),
+    pygame.Rect(540, 250, 20, 175),
+    pygame.Rect(540, 150, 65, 20),
+    pygame.Rect(540, 250, 65, 20),
+
+    pygame.Rect(270, 170, 70, 75),
+    pygame.Rect(45, 0, 495, 10),
+]
+
+dots = [
+    pygame.Rect(70, 200, 15, 15),
+    pygame.Rect(127, 200, 15, 15),
+    pygame.Rect(180, 200, 15, 15),
+    pygame.Rect(239, 200, 15, 15),
+    pygame.Rect(349, 200, 15, 15),
+    pygame.Rect(405, 200, 15, 15),
+    pygame.Rect(460, 200, 15, 15),
+    pygame.Rect(525, 200, 15, 15),
+    pygame.Rect(70, 40, 15, 15),
+    pygame.Rect(127, 40, 15, 15),
+    pygame.Rect(180, 40, 15, 15),
+    pygame.Rect(239, 40, 15, 15),
+    pygame.Rect(349, 40, 15, 15),
+    pygame.Rect(405, 40, 15, 15),
+    pygame.Rect(460, 40, 15, 15),
+    pygame.Rect(525, 40, 15, 15),
+    pygame.Rect(70, 120, 15, 15),
+    pygame.Rect(127, 120, 15, 15),
+    pygame.Rect(180, 120, 15, 15),
+    pygame.Rect(239, 120, 15, 15),
+    pygame.Rect(349, 120, 15, 15),
+    pygame.Rect(405, 120, 15, 15),
+    pygame.Rect(460, 120, 15, 15),
+    pygame.Rect(525, 120, 15, 15),
+    pygame.Rect(70, 270, 15, 15),
+    pygame.Rect(127, 270, 15, 15),
+    pygame.Rect(180, 270, 15, 15),
+    pygame.Rect(239, 270, 15, 15),
+    pygame.Rect(349, 270, 15, 15),
+    pygame.Rect(405, 270, 15, 15),
+    pygame.Rect(460, 270, 15, 15),
+    pygame.Rect(525, 270, 15, 15),
+    pygame.Rect(70, 350, 15, 15),
+    pygame.Rect(127, 350, 15, 15),
+    pygame.Rect(180, 350, 15, 15),
+    pygame.Rect(239, 350, 15, 15),
+    pygame.Rect(349, 350, 15, 15),
+    pygame.Rect(405, 350, 15, 15),
+    pygame.Rect(460, 350, 15, 15),
+    pygame.Rect(525, 350, 15, 15),
+    pygame.Rect(20, 200, 15, 15),
+    pygame.Rect(295, 40, 15, 15),
+    pygame.Rect(295, 120, 15, 15),
+    pygame.Rect(295, 270, 15, 15),
+    pygame.Rect(570, 200, 15, 15),
+]
+
+# Set up the game
+clock = pygame.time.Clock()
+running = True
+won = False
+level_one = False
+level_two = False
+
+# Main game loop
+while running:
+
+    # Maintain 60 FPS frame rate
+    dt = clock.tick(60)
+
+    # Check for events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Get the keys being pressed
+    keys = pygame.key.get_pressed()
+
+    if won == False and game_won == False:
+
+        # Move left
+        if keys[pygame.K_a]:
+            player_x -= speed
+            player = pygame.Rect(player_x, player_y, player_size*2, player_size*2)
+            if check_collision(player, walls):
+                player_x += speed
+
+        # Move right
+        if keys[pygame.K_d]:
+            player_x += speed
+            player = pygame.Rect(player_x, player_y, player_size*2, player_size*2)
+            if check_collision(player, walls):
+                player_x -= speed
+
+        # Move up
+        if keys[pygame.K_w]:
+            player_y -= speed
+            player = pygame.Rect(player_x, player_y, player_size*2, player_size*2)
+            if check_collision(player, walls):
+                player_y += speed
+
+        # Move down
+        if keys[pygame.K_s]:
+            player_y += speed
+            player = pygame.Rect(player_x, player_y, player_size*2, player_size*2)
+            if check_collision(player, walls):
+                player_y -= speed
+
+        # Screen wrapping / bounds
+        if player_x < 5:
+            player_x = 570
+            player_y = 200
+
+        if player_x > 570:
+            player_x = 6
+            player_y = 200
+
+        # Update the collision definitions
+        player_rect = pygame.Rect(player_x, player_y, player_size*2, player_size*2)
+        enemy_rect = pygame.Rect(enemy_x - enemy_size, enemy_y - enemy_size, enemy_size*2, enemy_size*2)
+        enemy2_rect = pygame.Rect(enemy2_x - enemy_size, enemy2_y - enemy_size, enemy_size*2, enemy_size*2)
+        power_ups_rect = pygame.Rect(power_up_x, power_up_y, 25, 25)
+
+        # Handle Power-up timing and Enemy
+        if power_up_active or power_up_active1:
+
+            if player_rect.colliderect(power_ups_rect):
+                power_up_active = False
+                power_up_active1 = False
+                power_up_timer = 320
+
+            # enemy chasing
+            if enemy_x < player_x + player_size:
+                enemy_x += enemy_speed
+            elif enemy_x > player_x + player_size:
+                enemy_x -= enemy_speed
+
+            if enemy_y < player_y + player_size:
+                enemy_y += enemy_speed
+            elif enemy_y > player_y + player_size:
+                enemy_y -= enemy_speed
+
+        else:
+            # Power-up active
+            if power_up_timer > 0:
+                power_up_timer -= 1
+
+                if enemy_x < player_x + player_size:
+                    enemy_x -= enemy_speed * 0.5
+                else:
+                    enemy_x += enemy_speed * 0.5
+
+            else:
+                power_up_active1 = True
+
+        if power_up_active == False:
+            power_up_x = 600
+            power_up_y = 600
+
+        # Second enemy movement
+        if level2_text > 0 :
+
+            if enemy2_x < player_x + player_size:
+                enemy2_x += enemy_speed
+            elif enemy2_x > player_x + player_size:
+                enemy2_x -= enemy_speed
+
+            if enemy2_y < player_y + player_size:
+                enemy2_y += enemy_speed
+            elif enemy2_y > player_y + player_size:
+                enemy2_y -= enemy_speed
+
+        
+
+            # Second ghost collision
+            if player_rect.colliderect(enemy2_rect):
+
+                if power_up_timer > 0:
+                    enemy2_x, enemy2_y = 250, 100
+                else:
+                    running = False
+
+        # Catch player-enemy collision
+        if player_rect.colliderect(enemy_rect):
+
+            if power_up_timer > 0:
+                enemy_x, enemy_y = 250, 300
+            else:
+                running = False
+
+        # Dot eating mechanics
+        for dot in dots:
+            if player_rect.colliderect(dot) and dot.x != -100:
+                dot.x = -100
+                dot.y = -100
+                score += 10
+
+    # Draw the background
+    screen.fill(BLACK)
+
+    # Draw the maze walls
+    for wall in walls:
+        pygame.draw.rect(screen, BLUE, wall)
+
+    # Draw active dots
+    for dot in dots:
+        if dot.x > 0:
+            pygame.draw.rect(screen, WHITE, dot)
+
+    # Draw the power-up if it hasn't been eaten yet
+    if power_up_active:
+        pygame.draw.rect(screen, ORANGE, power_ups_rect)
+
+    # Draw Player & Enemy
+    pygame.draw.circle(
+        screen, YELLOW,
+        (int(player_x + player_size), int(player_y + player_size)),
+        player_size
+    )
+
+    # If the ghost is vulnerable, change its color to Blue!
+    ghost_color = PURPLE if power_up_timer > 0 else RED
+
+    pygame.draw.circle(
+        screen, ghost_color,
+        (int(enemy_x), int(enemy_y)),
+        enemy_size
+    )
+
+    # Draw second ghost in Level Two
+    if level2_text > 0:
+        pygame.draw.circle(
+            screen, PERIWINKLE,
+            (int(enemy2_x), int(enemy2_y)),
+            enemy_size
+        )
+
+    # Check win con (dots eaten)
+    if all(dot.x == -100 for dot in dots):
+
+        if level2_text == 0:
+            level2_text += 1000
+
+            level_message_timer = 300
+
+            for dot in dots:
+                level_two = True
+
+                dots = [
+                    pygame.Rect(70, 200, 15, 15),
+                    pygame.Rect(127, 200, 15, 15),
+                    pygame.Rect(180, 200, 15, 15),
+                    pygame.Rect(239, 200, 15, 15),
+                    pygame.Rect(349, 200, 15, 15),
+                    pygame.Rect(405, 200, 15, 15),
+                    pygame.Rect(460, 200, 15, 15),
+                    pygame.Rect(525, 200, 15, 15),
+                    pygame.Rect(70, 40, 15, 15),
+                    pygame.Rect(127, 40, 15, 15),
+                    pygame.Rect(180, 40, 15, 15),
+                    pygame.Rect(239, 40, 15, 15),
+                    pygame.Rect(349, 40, 15, 15),
+                    pygame.Rect(405, 40, 15, 15),
+                    pygame.Rect(460, 40, 15, 15),
+                    pygame.Rect(525, 40, 15, 15),
+                    pygame.Rect(70, 120, 15, 15),
+                    pygame.Rect(127, 120, 15, 15),
+                    pygame.Rect(180, 120, 15, 15),
+                    pygame.Rect(239, 120, 15, 15),
+                    pygame.Rect(349, 120, 15, 15),
+                    pygame.Rect(405, 120, 15, 15),
+                    pygame.Rect(460, 120, 15, 15),
+                    pygame.Rect(525, 120, 15, 15),
+                    pygame.Rect(70, 270, 15, 15),
+                    pygame.Rect(127, 270, 15, 15),
+                    pygame.Rect(180, 270, 15, 15),
+                    pygame.Rect(239, 270, 15, 15),
+                    pygame.Rect(349, 270, 15, 15),
+                    pygame.Rect(405, 270, 15, 15),
+                    pygame.Rect(460, 270, 15, 15),
+                    pygame.Rect(525, 270, 15, 15),
+                    pygame.Rect(70, 350, 15, 15),
+                    pygame.Rect(127, 350, 15, 15),
+                    pygame.Rect(180, 350, 15, 15),
+                    pygame.Rect(239, 350, 15, 15),
+                    pygame.Rect(349, 350, 15, 15),
+                    pygame.Rect(405, 350, 15, 15),
+                    pygame.Rect(460, 350, 15, 15),
+                    pygame.Rect(525, 350, 15, 15),
+                    pygame.Rect(20, 200, 15, 15),
+                    pygame.Rect(295, 40, 15, 15),
+                    pygame.Rect(295, 120, 15, 15),
+                    pygame.Rect(295, 270, 15, 15),
+                    pygame.Rect(570, 200, 15, 15),
+                ]
+
+        else:
+            game_won = True
+
+    # Level Two message (disappears after 5 seconds)
+    if level_message_timer > 0:
+        font = pygame.font.SysFont(None, 48)
+        message = font.render("LEVEL TWO!", True, WHITE)
+        screen.blit(message, (220, 180))
+        level_message_timer -= 1
+
+    # Display score and level
+    font = pygame.font.SysFont(None, 28)
+
+    score_text = font.render(f"Score: {score}", True, WHITE)
+    screen.blit(score_text, (10, 10))
+
+    if level2_text > 2:
+        level = 2
+    else:
+        level = 1
+
+    level_text = font.render(f"Level: {level}", True, WHITE)
+    screen.blit(level_text, (470, 10))
+
+    if level_two == True:
+        for dot in dots:
+            if dot.x > 0:
+                pygame.draw.rect(screen, WHITE, dot)
+
+        level_two = False
+
+    # display ending screen
+    if game_won == True:
+
+        pygame.mixer.music.stop()
+
+        font = pygame.font.SysFont(None, 60)
+        message = font.render("YOU WIN!", True, YELLOW)
+        screen.blit(message, (190, 140))
+
+        font = pygame.font.SysFont(None, 35)
+        score_text = font.render(f"Final Score: {score}", True, WHITE)
+        screen.blit(score_text, (190, 210))
+
+        won = True
+
+    pygame.display.flip()
+
+pygame.quit()
